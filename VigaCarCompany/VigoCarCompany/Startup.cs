@@ -2,9 +2,11 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using VigoCarCompany.Data;
 
 namespace VigoCarCompany
 {
@@ -20,6 +22,17 @@ namespace VigoCarCompany
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
+			//// Auto Mapper Configurations
+			services.AddAutoMapper(typeof(Startup));
+
+			//// get/pass connection string from dbcontext class, here in servics or get connection from appssetting.json file 
+			//// below line of code set connection string here in services
+			//services.AddDbContext<DefaultDBContext>(options => options.UseSqlServer("Server=.; Database=VegaCarDB; Integrated Security=True;"));
+			////below two method to get connection string from appsetting.json file
+			////services.AddDbContext<DefaultDBContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:Default"]));
+			services.AddDbContext<VigoDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default")));
+
+
 			services.AddControllersWithViews();
 			// In production, the Angular files will be served from this directory
 			services.AddSpaStaticFiles(configuration =>
